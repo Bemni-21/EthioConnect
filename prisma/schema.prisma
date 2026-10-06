@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  PROVIDER
+  ADMIN
+}
+
+enum PricingType {
+  HOURLY
+  FIXED
+  NEGOTIABLE
+}
+
+model User {
+  id           String           @id @default(cuid())
+  name         String
+  email        String           @unique
+  phone        String?
+  passwordHash String
+  role         Role             @default(CLIENT)
+  avatarUrl    String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  provider     ProviderProfile?
+  reviews      Review[]         @relation("ClientReviews")
+}
+
+model Category {
+  id          String             @id @default(cuid())
+  slug        String             @unique
+  nameEn      String
+  nameAm      String
+  icon        String
+  description String?
+  providers   ProviderProfile[]
+}
+
+model ProviderProfile {
+  id            String        @id @default(cuid())
+  userId        String        @unique
+  user          User          @relation(fields: [userId], references: [id])
+  businessName  String
+  bio           String
+  city          String
+  subcity       String?
+  woreda        String?
+  categories    Category[]
+  pricingType   PricingType   @default(NEGOTIABLE)
+  startingPrice Float?
+  phone         String?
+  telegram      String?
+  whatsapp      String?
+  isVerified    Boolean       @default(false)
+  isActive      Boolean       @default(true)
+  idDocUrl      String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  reviews       Review[]      @relation("ProviderReviews")
+
+  @@index([city, isActive])
+}
+
+model Review {
+  id         String           @id @default(cuid())
+  rating     Int
+  comment    String?
+  provider   ProviderProfile  @relation("ProviderReviews", fields: [providerId], references: [id])
+  providerId String
+  client     User             @relation("ClientReviews", fields: [clientId], references: [id])
+  clientId   String
+  createdAt  DateTime         @default(now())
+
+  @@unique([providerId, clientId])
+  @@index([providerId])
+}
