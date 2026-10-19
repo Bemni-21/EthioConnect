@@ -86,8 +86,4 @@ src/components/             # Navbar, Footer, ProviderCard, Stars,
 | GET    | `/api/admin/stats`             | dashboard stats (admin only)   |
 | PATCH  | `/api/admin/providers/[id]`    | approve / reject / deactivate  |
 
-## Security notes
 
-- Rotate the Supabase password and `SESSION_SECRET` before any public deployment (they were shared during setup).
-- Set `COOKIE_SECURE="true"` on HTTPS deployments.
-- Provider ID verification (kebele ID / business license upload) is modeled in the schema (`idDocUrl`) — wire it to a storage bucket + admin review UI as a next step.
