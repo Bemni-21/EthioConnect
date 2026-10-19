@@ -2,7 +2,6 @@
 
 **Find trusted local services in Ethiopia** — plumbers, electricians, mechanics, tutors, hair salons, cleaners, freelancers and more.
 
-Live demo: http://localhost:3000
 
 ## Features
 
